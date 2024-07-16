@@ -1,0 +1,26 @@
+syntax = "proto3";
+
+option java_package = "ru.mycompany.grpc";
+option java_outer_classname = "CurrencyRateProto";
+
+service CurrencyRateService {
+  rpc getCurrencyRates (CurrencyRateRequest) returns (CurrencyRateResponse);
+}
+
+message CurrencyRateRequest {
+  string charCode = 1;
+  string date = 3; // Дата в формате "dd/MM/yyyy"
+}
+
+message CurrencyRateResponse {
+  repeated CurrencyRate rates = 1;
+}
+
+message CurrencyRate {
+  string numCode = 1;
+  string charCode = 2;
+  int32 nominal = 3;
+  string name = 4;
+  double value = 5;
+  double vunitRate = 6;
+}

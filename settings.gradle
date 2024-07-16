@@ -1,0 +1,6 @@
+rootProject.name = 'currency-rate'
+include 'cbr-rate'
+include 'currency-calculation'
+include 'frontend'
+
+

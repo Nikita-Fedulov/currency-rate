@@ -1,0 +1,30 @@
+grpc:
+  server:
+    port: 8980
+
+
+spring:
+  spring:
+    codec:
+      charset: UTF-8
+  datasource:
+    url: jdbc:postgresql://localhost:5432/currency-db
+    username: postgres
+    password: postgresql
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+  application:
+    name: cbrRate
+
+cbr:
+    url: https://www.cbr.ru/scripts/XML_daily.asp
+
+logging:
+  level:
+    ru.mycompany: INFO
+  charset: UTF-8
+
+
