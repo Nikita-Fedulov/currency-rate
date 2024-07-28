@@ -12,7 +12,10 @@ public interface CurrencyRateRepository extends JpaRepository<CurrencyRate, Long
 
      CurrencyRate findByNumCodeAndDate(String numCode,  LocalDate date);
 
-     CurrencyRate findByCharCode (String charCode);
+     List<CurrencyRate> findByCharCode (String charCode);
+
+
+    List<CurrencyRate> findAllByDate(LocalDate date);
 
 }
 

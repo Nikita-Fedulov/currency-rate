@@ -37,12 +37,31 @@ public class CurrencyRateService {
     private final CbrConfig cbrConfig;
 
 
-    public void getCurrencyRateCBR(LocalDate date) {
+    public List<CurrencyRate> getCurrencyRateForDate(LocalDate date) {
+        // Сначала запрашиваем и сохраняем данные, если их нет
+        fetchAndSaveCurrencyRate(date);
 
-        log.info("getCurrencyRate. currency:{} ", date);
+        // Затем извлекаем и возвращаем данные
+        return repository.findAllByDate(date);
+    }
+
+    private void fetchAndSaveCurrencyRate(LocalDate date) {
+        log.info("Fetching currency rate for date: {}", date);
+
+        // Проверяем, есть ли уже данные в базе данных
+        List<CurrencyRate> existingRates = repository.findAllByDate(date);
+        if (!existingRates.isEmpty()) {
+            log.info("Data for date {} already exists in the database", date);
+            return;
+        }
+        // Если данных нет, загружаем их из источника
+        getCurrencyRateCBR(date);
+    }
+
+    private void getCurrencyRateCBR(LocalDate date) {
+        log.info("Fetching currency rates from CBR for date: {}", date);
 
         LocalDateTime requestDate = LocalDateTime.now();
-
         List<CurrencyRateDTO> rates;
         try {
             var urlWithParams = String.format("%s?date_req=%s", cbrConfig.getUrl(), DATE_FORMATTER.format(date));
@@ -65,7 +84,7 @@ public class CurrencyRateService {
 
                     repository.save(rate);
                 } else {
-                    log.info("the data for this date {} full", date);
+                    log.info("The data for date {} already exists in the database", date);
                 }
             }
         } catch (Exception e) {
@@ -73,6 +92,5 @@ public class CurrencyRateService {
             e.printStackTrace();
         }
     }
-
 
 }

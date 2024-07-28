@@ -29,26 +29,37 @@ public class CurrencyRateGrpcService extends CurrencyRateServiceGrpc.CurrencyRat
     public void getCurrencyRates(CurrencyRateProto.CurrencyRateRequest request, StreamObserver<CurrencyRateProto.CurrencyRateResponse> responseObserver) {
         String charCodeInputCur = request.getCharCode();
         LocalDate date = LocalDate.parse(request.getDate(), DATE_FORMATTER);
-        currencyRateService.getCurrencyRateCBR(date);
 
-        CurrencyRate cr = currencyRateRepository.findByCharCode(charCodeInputCur);
-        charCodeInputCur = cr.getNumCode();
+        // Запрашиваем и сохраняем валютные данные, если они отсутствуют
+        currencyRateService.getCurrencyRateForDate(date);
 
-        CurrencyRate currencyRates = currencyRateRepository.findByNumCodeAndDate(charCodeInputCur, date);
+        // Находим валютный курс по кодировке валюты
+        List<CurrencyRate> currencyRates = currencyRateService.getCurrencyRateForDate(date);
 
         CurrencyRateProto.CurrencyRateResponse.Builder responseBuilder = CurrencyRateProto.CurrencyRateResponse.newBuilder();
 
-            CurrencyRateProto.CurrencyRate currencyRateProto = CurrencyRateProto.CurrencyRate.newBuilder()
-                    .setNumCode(currencyRates.getNumCode())
-                    .setCharCode(currencyRates.getCharCode())
-                    .setNominal(currencyRates.getNominal())
-                    .setName(currencyRates.getName())
-                    .setValue(currencyRates.getValue())
-                    .setVunitRate(currencyRates.getVunitRate())
-                    .build();
-            responseBuilder.addRates(currencyRateProto);
+        for (CurrencyRate currencyRate : currencyRates) {
+            if (currencyRate.getCharCode().equals(charCodeInputCur)) {
+                CurrencyRateProto.CurrencyRate currencyRateProto = CurrencyRateProto.CurrencyRate.newBuilder()
+                        .setNumCode(currencyRate.getNumCode())
+                        .setCharCode(currencyRate.getCharCode())
+                        .setNominal(currencyRate.getNominal())
+                        .setName(currencyRate.getName())
+                        .setValue(currencyRate.getValue())
+                        .setVunitRate(currencyRate.getVunitRate())
+                        .build();
+                responseBuilder.addRates(currencyRateProto);
+            }
+        }
 
-        responseObserver.onNext(responseBuilder.build());
-        responseObserver.onCompleted();
-  }
+        if (responseBuilder.getRatesCount() == 0) {
+            // Если нет валютных данных для указанного кода, возвращаем ошибку
+            responseObserver.onError(
+                    io.grpc.Status.NOT_FOUND.withDescription("Currency rate not found for charCode: " + charCodeInputCur).asException()
+            );
+        } else {
+            responseObserver.onNext(responseBuilder.build());
+            responseObserver.onCompleted();
+        }
+    }
 }
