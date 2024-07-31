@@ -10,7 +10,6 @@ sourceCompatibility = JavaVersion.VERSION_17
 targetCompatibility = JavaVersion.VERSION_17
 
 group = 'ru.mycompany'
-version = '0.0.1-Calk'
 
 repositories {
     mavenCentral()

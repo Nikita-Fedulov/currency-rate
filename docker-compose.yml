@@ -1,6 +1,40 @@
 version: '3.8'
 services:
-  postgres:
+  cbr-rate:
+    image: cbr-rate
+    build:
+      context: C:/Users/nikim/currency-rate/cbr-rate
+      dockerfile: Dockerfile
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://currency-db:5432/currency-db
+      - SPRING_DATASOURCE_USERNAME=postgres
+      - SPRING_DATASOURCE_PASSWORD=postgresql
+      - SPRING_JPA_HIBERNATE_DDL_AUTO=update
+      - SPRING_JPA_SHOW_SQL=true
+    ports:
+      - "8980:8980"
+    depends_on:
+      - currency-db
+
+  currency-calculation:
+    image: currency-calculation
+    build:
+      context: C:/Users/nikim/currency-rate/currency-calculation
+      dockerfile: Dockerfile
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://calculation-db:5432/currency-calculation-db
+      - SPRING_DATASOURCE_USERNAME=postgres
+      - SPRING_DATASOURCE_PASSWORD=postgresql
+      - SPRING_JPA_HIBERNATE_DDL_AUTO=update
+      - SPRING_JPA_SHOW_SQL=true
+      - GRPC_CLIENT_GLOBAL_ADDRESS=static://cbr-rate:8980
+    ports:
+      - "8081:8081"
+    depends_on:
+      - calculation-db
+      - cbr-rate
+
+  currency-db:
     image: postgres:13
     environment:
       POSTGRES_DB: currency-db
@@ -8,36 +42,12 @@ services:
       POSTGRES_PASSWORD: postgresql
     ports:
       - "5432:5432"
-    volumes:
-      - pgdata:/var/lib/postgresql/data
 
-  cbr-rate:
-    build:
-      context: C:/Users/nikim/currency-rate/cbr-rate
-      dockerfile: Dockerfile
+  calculation-db:
+    image: postgres:13
     environment:
-      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/currency-db
-      - SPRING_DATASOURCE_USERNAME=postgres
-      - SPRING_DATASOURCE_PASSWORD=postgresql
-    depends_on:
-      - postgres
+      POSTGRES_DB: currency-calculation-db
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgresql
     ports:
-      - "8082:8082"
-
-  currency-calculation:
-    build:
-      context: C:/Users/nikim/currency-rate/currency-calculation
-      dockerfile: Dockerfile
-    environment:
-      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/currency-calculation-db
-      - SPRING_DATASOURCE_USERNAME=postgres
-      - SPRING_DATASOURCE_PASSWORD=postgresql
-      - GRPC_CLIENT_CBR-RATE_ADDRESS=cbr-rate:localhost:8980
-    depends_on:
-      - postgres
-      - cbr-rate
-    ports:
-      - "8081:8081"
-
-volumes:
-  pgdata:
+      - "5433:5432"

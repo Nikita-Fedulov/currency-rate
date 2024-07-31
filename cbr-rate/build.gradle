@@ -3,13 +3,14 @@ plugins {
     id 'idea'
     id 'org.springframework.boot' version '2.5.8'
     id 'com.google.protobuf' version '0.8.18'
+    id 'com.google.cloud.tools.jib' version '3.2.0'
 }
+
 
 sourceCompatibility = JavaVersion.VERSION_17
 targetCompatibility = JavaVersion.VERSION_17
 
 group = 'ru.mycompany'
-version = '0.0.1-cbr-rate'
 
 repositories {
     mavenCentral()
@@ -87,6 +88,7 @@ sourceSets {
 tasks.named('processResources') {
     duplicatesStrategy = DuplicatesStrategy.EXCLUDE
 }
+
 
 test {
     useJUnitPlatform()
