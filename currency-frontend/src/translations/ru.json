@@ -1,0 +1,8 @@
+{
+  "currencyConverter": "Конвертер валют",
+  "inputCurrency": "Входная валюта",
+  "outputCurrency": "Выходная валюта",
+  "amount": "Сумма",
+  "date": "Дата",
+  "calculate": "Рассчитать"
+}
