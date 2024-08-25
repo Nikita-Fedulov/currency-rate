@@ -1,77 +1,101 @@
-body {
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&family=Montserrat:wght@400;600&display=swap');
+
+html, body {
+  height: 100%;
   margin: 0;
-  padding: 0;
-  font-family: 'Arial', sans-serif;
-  background: linear-gradient(to right, #74ebd5, #9face6);
-  height: 100vh;
+}
+
+.app {
+  font-family: 'Roboto', sans-serif;
+  min-height: 100vh; /* Занимает минимальную высоту экрана */
   display: flex;
   justify-content: center;
   align-items: center;
-}
-
-.App {
-  text-align: center;
+  background-color: #e0f7fa; /* Голубой фон */
   color: #333;
 }
 
 .container {
-  background: white;
-  padding: 2rem;
-  border-radius: 10px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  max-width: 700px;
+  padding: 30px;
+  border: 1px solid #ddd;
+  border-radius: 12px;
+  background-color: #ffffff;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
 }
 
 h1 {
-  margin-bottom: 1rem;
-  color: #4b79a1;
+  text-align: center;
+  margin-bottom: 20px;
+  color: #444;
 }
 
 .form-group {
-  margin-bottom: 1rem;
+  margin-bottom: 20px;
 }
 
-label {
-  display: block;
-  font-size: 1.2rem;
-  margin-bottom: 0.5rem;
+.currency-group {
+  display: flex;
+  gap: 20px;
+  align-items: center;
 }
 
-input[type="number"],
-input[type="date"],
-select {
-  width: 100%;
-  padding: 0.
-  5rem;
-  font-size: 1rem;
-  margin-top: 0.5rem;
+.currency-label {
+  flex: 0 0 auto;
+  margin-right: 10px;
+}
+
+.currency-input {
+  flex: 1;
+  padding: 12px;
+  box-sizing: border-box;
   border: 1px solid #ddd;
-  border-radius: 5px;
+  border-radius: 8px;
+  font-size: 16px;
 }
 
-input[type="number"]:focus,
-input[type="date"]:focus,
-select:focus {
+.currency-input:focus {
+  border-color: #007bff;
   outline: none;
-  border-color: #4b79a1;
 }
 
-.calculate-button {
-  background: #4b79a1;
+button {
+  display: block;
+  width: 100%;
+  padding: 14px;
+  background-color: #007bff;
   color: white;
-  padding: 0.75rem 1.5rem;
-  font-size: 1.2rem;
   border: none;
-  border-radius: 5px;
+  border-radius: 8px;
   cursor: pointer;
-  transition: background 0.3s;
+  font-size: 18px;
+  transition: background-color 0.3s ease;
 }
 
-.calculate-button:hover {
-  background: #355f80;
+button:hover {
+  background-color: #0056b3;
+}
+
+.result, .error {
+  margin-top: 20px;
+  padding: 15px;
+  border-radius: 8px;
 }
 
 .result {
-  margin-top: 1rem;
-  font-size: 1.5rem;
-  color: #4b79a1;
+  background-color: #d4edda;
+  border: 1px solid #c3e6c0;
+  color: #155724;
+}
+
+.error {
+  background-color: #f8d7da;
+  border: 1px solid #f5c6cb;
+  color: #721c24;
+}
+
+.result p {
+  font-size: 18px;
+  font-weight: bold;
+  color: #333;
 }
